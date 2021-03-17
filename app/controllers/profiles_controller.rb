@@ -1,15 +1,16 @@
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_profile, except: %i[new create]
   before_action :public?, except: %i[private_page]
- 
-  def show 
+
+  def show
   end
 
   def new
     @profile = Profile.new
   end
 
-  def create 
+  def create
     @profile = Profile.create(profile_params)
     @profile.user = current_user
     current_user.profile_id = @profile.id
@@ -21,7 +22,7 @@ class ProfilesController < ApplicationController
     end
   end
 
-  def edit 
+  def edit
   end
 
   def update
@@ -30,7 +31,7 @@ class ProfilesController < ApplicationController
       redirect_to @profile
     else
       render :edit
-    end 
+    end
   end
 
   def change_privacy
@@ -38,13 +39,14 @@ class ProfilesController < ApplicationController
     redirect_to @profile
   end
 
-  def private_page 
+  def private_page
   end
 
-  private 
+  private
 
   def profile_params
-  end 
+    params.require(:profile).permit(:nickname, :bio, :avatar)
+  end
 
   def privacy_params
     params.require(:profile).permit(:share)
@@ -63,4 +65,3 @@ class ProfilesController < ApplicationController
   end
 
 end
-  

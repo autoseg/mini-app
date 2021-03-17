@@ -1,0 +1,70 @@
+<div class='container w-50 mt-5'>
+  <h3 class='text-center'>Comments</h3>
+
+  <%= form_for @new_comment do |f| %>
+    <div class='row'>
+      <div class='col-md-12'>
+        <%= f.hidden_field :task_id, value: @task.id %>
+
+        <%= f.label :body , 'New Comment'%>
+        <%= f.text_area :body, class: 'form-control', rows: 3 %>
+      </div>
+    </div>
+
+    <div class='row mt-2'>
+      <div class='col-md-12 text-right'>
+        <%= f.submit 'Post Comment', class: 'btn btn-primary ml-auto' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class='row justify-content-md-center'>
+    <ul class="nav nav-tabs">
+      <% ['newest', 'oldest', 'biggest_score', 'lowest_score'].each do |order| %>
+        <li class="nav-item">
+          <%= link_to order.titleize, task_path(@task, order_comments: order), class: ((params[:order_comments] == order) ? "nav-link active" : "nav-link") %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <% @comments.each do |comment| %>
+    <div class='border rounded p-3 m-3'>
+      <div class='w-100 row'>
+        <div class='col-md-6'>
+            <%= link_to "@#{comment.owner.nickname}", profile_path(comment.owner) %>
+        </div>
+        <div class='col-md-6 text-right'>
+          <small> Posted on <%= format_date_time(comment.created_at) %></small>
+        </div>
+      </div>
+
+      <div class='row mt-3'>
+        <div class='col-md-12'>
+          <p><%= comment.body %></p>
+        </div>
+      </div>
+
+      <div class='row mt-3'>
+        <div class='col-md-6'>
+          <%= comment.score %>
+
+          <%= link_to pluses_path(comment_id: comment.id), id: "like_comment_#{comment.id}", method: :post do %>
+            <i class="fa fa-arrow-up ml-2 <%= 'selected_vote' if current_user.pluses.find_by(comment: comment).present? %>" aria-hidden="true"></i>
+          <% end %>
+          <%= link_to minuses_path(comment_id: comment.id), id: "dislike_comment_#{comment.id}", method: :post do %>
+            <i class="fa fa-arrow-down <%= 'selected_vote' if current_user.minuses.find_by(comment: comment).present? %>" aria-hidden="true"></i>
+          <% end %>
+
+        </div>
+        <% if user_is_owner?(comment.user) %>
+          <div class='col-md-6 text-right'>
+            <%= link_to 'Delete', comment_path(comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-small', id: "delete_comment_#{comment.id}" %>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  <% end %>
+
+</div>

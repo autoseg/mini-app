@@ -1,0 +1,27 @@
+<div class='container border mx-auto w-50 rounded mb-3 p-3 tasks'>
+  <div class='row'>
+    <div class='col-md-9'>
+      <%= link_to task.title, task_path(task) %>
+    </div>
+
+    <div clas='col-md-3 text-right'>
+      <p>Priority: <span class='<%= task.priority %>'> <%= task.priority.capitalize %> </span></p>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-12'>
+      <p><%= task.description %></p>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-6'>
+      <p><%= task.status.capitalize %></p>
+    </div>
+
+    <div class='col-md-6 text-right'>
+      <small>Posted on <%= format_date_time(task.created_at) %></small>
+    </div>
+  </div>
+</div>

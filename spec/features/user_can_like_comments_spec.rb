@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'User can like comments' do 
+feature 'User can like comments' do
   scenario 'And can Like a comment' do
     user = create(:user)
     create(:profile, user: user, share: true)
@@ -9,7 +9,7 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Plus'
+    find("#like_comment_#{comment.id}").click
 
     expect(comment.pluses.count).to eq 1
     expect(page).to have_content('Comment Plused')
@@ -24,12 +24,11 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Minus'
+    find("#dislike_comment_#{comment.id}").click
 
     expect(comment.minuses.count).to eq 1
 
   end
-
 
   scenario 'And can sort by most Likes' do
     user = create(:user)
@@ -65,7 +64,7 @@ feature 'User can like comments' do
 
   end
 
-  scenario 'And if Plus a comment twitce, it reverts back to unplused' do 
+  scenario 'And if Plus a comment twitce, it reverts back to unplused' do
     user = create(:user)
     create(:profile, user: user, share: true)
     task = create(:task, user: user)
@@ -73,8 +72,8 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Plus'
-    click_on 'Plus'
+    find("#like_comment_#{comment.id}").click
+    find("#like_comment_#{comment.id}").click
 
     expect(comment.pluses.count).to eq 0
     expect(page).to have_content('Comment Unplused')
@@ -89,8 +88,8 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Minus'
-    click_on 'Minus'
+    find("#dislike_comment_#{comment.id}").click
+    find("#dislike_comment_#{comment.id}").click
 
     expect(comment.minuses.count).to eq 0
     expect(page).to have_content('Comment Unminused')
@@ -105,8 +104,8 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Plus'
-    click_on 'Minus'
+    find("#like_comment_#{comment.id}").click
+    find("#dislike_comment_#{comment.id}").click
 
     expect(comment.score).to eq 0
     expect(page).to have_content('Comment Unplused')
@@ -121,8 +120,8 @@ feature 'User can like comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Minus'
-    click_on 'Plus'
+    find("#dislike_comment_#{comment.id}").click
+    find("#like_comment_#{comment.id}").click
 
     expect(comment.score).to eq 0
     expect(page).to have_content('Comment Unminused')

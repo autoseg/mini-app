@@ -9,10 +9,10 @@ class ApplicationController < ActionController::Base
   private
 
   def plused?
-    Pluse.where(user: current_user, comment: @comment).exists?
+    @plus = current_user.pluses.find_by(comment: @comment).presence
   end
 
   def minused?
-    Minuse.where(user: current_user, comment: @comment).exists?
+    @minus = current_user.minuses.find_by(comment: @comment).presence
   end
 end

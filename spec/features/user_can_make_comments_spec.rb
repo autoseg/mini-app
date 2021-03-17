@@ -8,7 +8,7 @@ feature 'User can make comments' do
     login_as(user)
 
     visit task_path(task)
-    fill_in 'Comment', with: 'Test Comment'
+    fill_in 'New Comment', with: 'Test Comment'
     click_on 'Post Comment'
 
     expect(page).to have_content('Comment Added!')
@@ -23,9 +23,9 @@ feature 'User can make comments' do
     login_as(user)
 
     visit task_path(task)
-    fill_in 'Comment', with: 'First Comment'
+    fill_in 'New Comment', with: 'First Comment'
     click_on 'Post Comment'
-    fill_in 'Comment', with: 'Second Comment'
+    fill_in 'New Comment', with: 'Second Comment'
     click_on 'Post Comment'
 
     expect(page).to have_content('First Comment')
@@ -33,14 +33,14 @@ feature 'User can make comments' do
 
   end
 
-  scenario 'And comment can\'t be blank' do 
+  scenario 'And comment can\'t be blank' do
     user = create(:user)
     create(:profile, user: user)
     task = create(:task, user: user)
     login_as(user)
 
     visit task_path(task)
-    fill_in 'Comment', with: ''
+    fill_in 'New Comment', with: ''
     click_on 'Post Comment'
 
     expect(page).to have_content('Comment body can\'t be blank')
@@ -58,7 +58,7 @@ feature 'User can make comments' do
     visit task_path(task)
     click_on "@#{user.profile.nickname}"
 
-    expect(current_path).to eq profile_path(user) 
+    expect(current_path).to eq profile_path(user)
 
   end
 
@@ -91,12 +91,11 @@ feature 'User can make comments' do
     click_on 'My Comments'
 
     expect(page).to have_content(comment.body)
-    expect(page).to have_content(other_comment.body) 
+    expect(page).to have_content(other_comment.body)
 
   end
 
   scenario 'And can Delete a Comment' do
-    pending("Can't make Capybara click on Pop Ups")
     user = create(:user)
     create(:profile, user: user, share: true)
     task = create(:task, user: user)
@@ -104,14 +103,13 @@ feature 'User can make comments' do
     login_as(user)
 
     visit task_path(task)
-    click_on 'Delete'
-    click_button 'Ok'
-    
-    expect(page).not_to have_content(comment.body)
+    find("#delete_comment_#{comment.id}").click
 
+    expect(page).not_to have_content(comment.body)
+    expect(page).to have_content('Comment Deleted!')
   end
 
-  scenario 'And must be owner to Delete a Comment' do 
+  scenario 'And must be owner to Delete a Comment' do
     user = create(:user)
     other_user = create(:user)
     create(:profile, user: user, share: true)
@@ -135,8 +133,7 @@ feature 'User can make comments' do
     visit profile_comments_path(user.profile)
     click_on 'Newest'
 
-    new_comment.body.should appear_before(old_comment.body)
-
+    new_comment.body.should appear_before(old_comment.body, only_text: true)
   end
 
   scenario 'And can sort Comments by Old' do
@@ -151,9 +148,8 @@ feature 'User can make comments' do
     find('a', text: 'Oldest').click
 
 
-    old_comment.body.should appear_before(new_comment.body)
-
-  end 
+    old_comment.body.should appear_before(new_comment.body, only_text: true)
+  end
 
   scenario 'And can sort comments on task page by Newest' do
     user = create(:user)
@@ -166,8 +162,7 @@ feature 'User can make comments' do
     visit task_path(task)
     click_on 'Newest'
 
-    newest_comment.body.should appear_before(oldest_comment.body)
-
+    newest_comment.body.should appear_before(oldest_comment.body, only_text: true)
   end
 
   scenario 'And can sort comments on task page by Oldest' do
@@ -181,8 +176,7 @@ feature 'User can make comments' do
     visit task_path(task)
     click_on 'Oldest'
 
-    oldest_comment.body.should appear_before(newest_comment.body)
-
+    oldest_comment.body.should appear_before(newest_comment.body, only_text: true)
   end
 
   scenario 'And must be Loged in to see all Comments page' do
