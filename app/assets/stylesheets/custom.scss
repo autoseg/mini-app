@@ -1,0 +1,54 @@
+.high,
+.error {
+  color: red;
+}
+
+.medium {
+  color: rgb(180, 180, 4);
+}
+
+.low {
+  color: blue;
+}
+
+.tasks {
+  min-height: 100px;
+}
+
+.report-table {
+  thead {
+    tr {
+      th:nth-child(2) {
+        width: 455px;
+      }
+    }
+  }
+}
+
+#task_form,
+#task_container {
+  .row {
+    margin-bottom: 15px;
+  }
+
+  hr {
+    margin-bottom: 30px;
+  }
+}
+
+.privacy_setting {
+
+  > * {
+    width: 40%;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+.fa-arrow-up, .fa-arrow-down {
+  color: black;
+
+  &.selected_vote {
+    color: #007bff;
+  }
+}

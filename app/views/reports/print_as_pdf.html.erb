@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "pdf" -%>
+    <%= wicked_pdf_javascript_include_tag "number_pages" %>
+  </head>
+  <body onload='number_pages'>
+    <div class='pdf_container'>
+      <div class='pdf_header'>
+        <h1><%= params[:filter].presence.capitalize if params[:filter] != 'all' %> Tasks Report</h1>
+        <hr/>
+        <p><%= @emitter %></p>
+        <p><%= format_date(Date.current) %></p>
+      </div>
+
+      <div class='pdf_body'>
+        <table cellspacing='0'>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @tasks.each do |task| %>
+              <tr>
+                <td><%= task.title %></td>
+                <td><%= task.description %></td>
+                <td class='<%= task.priority %>'><%= task.priority.capitalize %></td>
+                <td>
+                  <% task.comments.sort_by(&:body).each do |comment| %>
+                    <%= comment.body %>
+                    <br/>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan='3' class='text-right'>TOTAL</td>
+              <td colspan='1' class='text-right'><%= @tasks.size %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+  </body>
+</html>

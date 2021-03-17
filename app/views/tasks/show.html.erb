@@ -1,0 +1,73 @@
+<div class='container border w-50 rounded p-4' id='task_container'>
+  <div class='row'>
+    <div class='col-md-6 text-left'>
+      <%= link_to :back do %>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      <% end %>
+    </div>
+    <div class='col-md-6 text-right'>
+      <small>Posted in <%= format_date_time(@task.created_at) %></small>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='col-md-12 text-center'>
+      <h3><%= @task.title %></h3>
+    </div>
+  </div>
+
+  <% if user_is_owner?(@task.user) %>
+    <div class='row'>
+      <div class='col-md-12 text-center'>
+          <%= link_to "#{@task.complete? ? 'Open' : 'Complete'} task", change_status_task_path(@task), method: :put, class: 'btn btn-outline-primary' %>
+      </div>
+    </div>
+  <% end %>
+
+  <hr/>
+
+  <div class='row text-center'>
+    <div class='col-md-6'>
+      <p class='<%= @task.priority %>'><%= @task.priority.capitalize %> priority</p>
+    </div>
+
+    <div class='col-md-6'>
+      <p>Status: <%= @task.status.capitalize %></p>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class='row'>
+    <div class='col-md-12'>
+      <p><%= @task.description %></p>
+    </div>
+  </div>
+
+  <!-- Owner Actions -->
+
+  <% if user_is_owner?(@task.user) %>
+    <hr/>
+
+    <div class='row'>
+      <div class='col-md-6'>
+        <%= form_for @task, url: change_privacy_task_path(@task), method: :put do |f| %>
+          <div class='d-flex flex-row text-left privacy_setting'>
+            <%= f.select :share, [['Private', false], ['Public', true]], {},  class: 'form-control', id: '#privacy' %>
+            <%= f.submit 'Change Privacy', class: 'btn btn-outline-secondary btn-sm' %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class='col-md-6 text-right'>
+        <div class='btn-group w-50' role='group'>
+          <%= link_to 'Delete', task_path(@task), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger w-50' %>
+          <%= link_to 'Edit', edit_task_path(@task), class: 'btn btn-primary w-50' %>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+
+<%= render 'comments' %>

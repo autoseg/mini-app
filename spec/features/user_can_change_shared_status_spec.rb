@@ -8,13 +8,14 @@ feature 'User can change shared status' do
 
     visit root_path
     click_on 'Create a Task'
-    fill_in 'Task Title', with: 'Test Task'
+    fill_in 'Title', with: 'Test Task'
     fill_in 'Description', with: 'Test Description'
     select 'Medium', from: 'Priority'
-    select 'Public', from: 'Privacy' 
-    click_on 'Create Task'
+    select 'Public', from: 'Privacy'
 
-    expect(Task.last.share).to eq true 
+    click_on 'Save'
+
+    expect(Task.last.share).to eq true
   end
 
   scenario 'When creating a task to false' do
@@ -24,17 +25,18 @@ feature 'User can change shared status' do
 
     visit root_path
     click_on 'Create a Task'
-    fill_in 'Task Title', with: 'Test Task'
+    fill_in 'Title', with: 'Test Task'
     fill_in 'Description', with: 'Test Description'
     select 'Medium', from: 'Priority'
-    select 'Private', from: 'Privacy' 
-    click_on 'Create Task'
+    select 'Private', from: 'Privacy'
 
-    expect(Task.last.share).to eq false 
+    click_on 'Save'
+
+    expect(Task.last.share).to eq false
 
   end
 
-  scenario 'On edit page to true' do 
+  scenario 'On edit page to true' do
     user = create(:user)
     profile = create(:profile, user: user)
     task = create(:task, user: user)
@@ -43,36 +45,38 @@ feature 'User can change shared status' do
     visit root_path
     click_on 'Task Board'
     click_on task.title
-    click_on 'Edit Task'
+    click_on 'Edit'
 
-    fill_in 'Task Title', with: 'Test Task'
+    fill_in 'Title', with: 'Test Task'
     fill_in 'Description', with: 'Test Description'
     select 'High', from: 'Priority'
-    select 'Public', from: 'Privacy' 
-    click_on 'Update Task' 
+    select 'Public', from: 'Privacy'
 
-    expect(Task.last.share).to eq true 
+    click_on 'Save'
+
+    expect(Task.last.share).to eq true
   end
 
-  scenario  'On edit page to false' do 
+  scenario  'On edit page to false' do
     user = create(:user)
     profile = create(:profile, user: user)
-    task = create(:task, user: user)
+    task = create(:task, user: user, share: true)
     login_as(user)
 
     visit root_path
     click_on 'Task Board'
     click_on task.title
-    click_on 'Edit Task'
+    click_on 'Edit'
 
-    fill_in 'Task Title', with: 'Test Task'
+    fill_in 'Title', with: 'Test Task'
     fill_in 'Description', with: 'Test Description'
     select 'High', from: 'Priority'
-    select 'Private', from: 'Privacy' 
-    click_on 'Update Task'
+    select 'Private', from: 'Privacy'
 
-    expect(Task.last.share).to eq false 
-  end 
+    click_on 'Save'
+
+    expect(Task.last.share).to eq false
+  end
 
   scenario 'And can edit on show page(Public to Private)' do
     user = create(:user)
@@ -83,25 +87,25 @@ feature 'User can change shared status' do
     visit root_path
     click_on 'Task Board'
     click_on task.title
-    select 'Private', from: 'Change Privacy:'
-    click_on 'Change Setting'
+    select 'Private', from: '#privacy'
+    click_on 'Change Privacy'
 
-    expect(page).to have_content('This Task is Private')
+    expect(page).to have_content('Task is Private')
   end
 
   scenario 'And can edit on show page(Private to Public)' do
     user = create(:user)
     profile = create(:profile, user: user)
-    task = create(:task, user: user, share: true)
+    task = create(:task, user: user, share: false)
     login_as(user)
 
     visit root_path
     click_on 'Task Board'
     click_on task.title
-    select 'Private', from: 'Change Privacy:'
-    click_on 'Change Setting'
+    select 'Public', from: '#privacy'
+    click_on 'Change Privacy'
 
-    expect(page).to have_content('This Task is Private')
+    expect(page).to have_content('Task is Public')
   end
 
-  end
+end

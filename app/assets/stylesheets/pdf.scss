@@ -1,0 +1,86 @@
+.pdf_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .pdf_header {
+    text-align: center;
+
+    h1 {
+      margin-bottom: 0;
+    }
+
+    hr {
+      border-color: #595959;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    p:nth-of-type(odd) {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+
+  .pdf_body {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+
+    table {
+      margin: 20px 0 40px 0;
+      width: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+      thead {
+        th {
+          background: #27ae60;
+          padding: 6px;
+          color: white;
+        };
+
+        tr {
+          th:nth-child(2) {
+            width: 455px;
+          }
+        }
+
+      }
+
+      tfoot {
+        text-align: right;
+      }
+
+      tbody,
+      tfoot {
+        font-size: 12px;
+
+        tr {
+          background: #f6f6f6;
+        }
+
+        tr:nth-of-type(odd) {
+          background-color: #e9e9e9;
+        }
+
+        td {
+          padding: 6px 12px;
+        }
+
+        .high{
+          color: red;
+        }
+
+        .medium{
+          color: rgb(180, 180, 4);
+        }
+
+        .low{
+          color: blue;
+        }
+      }
+    }
+  }
+}

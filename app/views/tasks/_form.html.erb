@@ -1,0 +1,49 @@
+<!-- Error -->
+
+<% @task.errors.full_messages.each do |error| %>
+  <p class='error text-center'><%= error %> </p>
+<% end %>
+
+<!-- Form -->
+
+<div class='container border rounded p-5 w-50 shadow-sm' id='task_form'>
+  <h2 class='text-center'><%= action %> Task</h2>
+
+  <%= form_for @task do |f| %>
+    <div class='row'>
+      <div class='col-md-12'>
+        <%= f.label :title %>
+        <%= f.text_field :title, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-md-12'>
+        <%= f.label :description %>
+        <%= f.text_area :description, class: 'form-control', rows: 4, maxlength: 280 %>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-md-6'>
+        <%= f.label :priority %>
+        <%= f.select :priority, Task.options_for_priority_select, {},  class: 'form-control' %>
+      </div>
+
+     <div class='col-md-6'>
+        <%= f.label :share, 'Privacy' %>
+        <%= f.select :share, [['Private', false], ['Public', true]], {},  class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-md-12 text-right mt-3'>
+        <div class='row btn-group mr-3' role='group'>
+          <%= link_to 'Back', :back, class: 'btn btn-outline-primary' %>
+          <%= f.submit 'Save', class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+</div>

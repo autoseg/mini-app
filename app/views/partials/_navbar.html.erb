@@ -3,45 +3,50 @@
     <!--Navbrand -->
     <%= button_to root_path, method: :get, class: 'nav-brand btn btn-outline-primary' do %>
       <i class="fa fa-home" aria-hidden="true"></i>
-    <% end %> 
+    <% end %>
 
     <!--Navbar for loged in user -->
-    <% if (user_signed_in?)%> 
+    <% if (user_signed_in?)%>
       <!-- Dropdown -->
-      <div class="btn-group ml-3"> 
-        <button type="button" class="btn btn-outline-primary"><i class='fa fa-tasks'></i>  Your Tasks</button> 
+      <div class="btn-group ml-3">
+        <button type="button" class="btn btn-outline-primary"><i class='fa fa-tasks'></i>  Your Tasks</button>
         <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
           <%= link_to ' Task Board', tasks_path, class: 'fa fa-laptop dropdown-item'%>
+          <%= link_to ' Tasks Report', report_path(filter: 'all'), class: 'fa fa-file-text-o dropdown-item' %>
         </div>
-      </div> 
+      </div>
       <!-- create task -->
       <%= link_to ' Create a Task', new_task_path, class: 'fa fa-cart-plus btn btn-outline-success ml-3'  %>
 
       <!-- Search -->
-      <div class='ml-auto mr-auto'>
-      </div> 
+      <div class='ml-auto mr-auto search-task'>
+        <%= form_tag tasks_path, method: :get do |f| %>
+          <%= text_field_tag :search, params[:search] || '', class: 'form_control', placeholder: 'Search Tasks' %>
+          <%= submit_tag "Search", disable_with: 'Searching...', class: 'btn btn-outline-primary btn-sm', id: 'search-btn' %>
+        <% end %>
+      </div>
       <!-- Profile Settings -->
       <!-- Dropdown -->
       <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary"><i class='fa fa-user-circle'></i>  Account Settings</button> 
+        <button type="button" class="btn btn-outline-primary"><i class='fa fa-user-circle'></i>  Account Settings</button>
         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         </button>
-        <div class="dropdown-menu"> 
+        <div class="dropdown-menu">
           <% if current_user.profile && current_user.profile.id %>
-            <%= link_to '  My Profile', profile_path(current_user.profile), class: 'fa fa-cogs dropdown-item'%> 
+            <%= link_to '  My Profile', profile_path(current_user.profile), class: 'fa fa-cogs dropdown-item'%>
             <%= link_to '  My Comments', profile_comments_path(current_user.profile), class: 'fa fa-comments dropdown-item' %>
       <% end %>
         </div>
-      </div> 
+      </div>
 
       <!-- Log Out -->
-      <%= link_to ' Log Out', destroy_user_session_path, method: :delete, class: 'fa fa-power-off btn btn-outline-danger ml-auto'%> 
+      <%= link_to ' Log Out', destroy_user_session_path, method: :delete, class: 'fa fa-power-off btn btn-outline-danger ml-auto'%>
 
     <!-- Navbar for Visitor -->
-    <% else %> 
+    <% else %>
      <%=link_to 'Log In', new_user_session_path, class: 'btn btn-outline-primary ml-auto' %>
      <%=link_to 'Create Account', new_user_registration_path, class: 'btn btn-outline-success ml-3' %>
     <% end %>
